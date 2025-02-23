@@ -123,7 +123,7 @@ dist
 
 # https://nextjs.org/blog/next-9-1#public-directory-support
 
-# public
+public
 
 # vuepress build output
 
@@ -157,6 +157,7 @@ dist
 # Stores VSCode versions used for testing VSCode extensions
 
 .vscode-test
+.vscode
 
 # yarn v2
 
