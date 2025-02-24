@@ -1,6 +1,8 @@
 import { Hono } from "hono";
 
-const app = new Hono();
+export interface Env {
+	aqualink_sites: KVNamespace;
+  }
 
 const metadata: Record<string, any> = {
 	about: {
@@ -17,6 +19,8 @@ const metadata: Record<string, any> = {
 	}
 }
 
+const app = new Hono<{ Bindings: Env }>();
+
 app.get("*", async (c) => {
 	const request=c.req;
 
@@ -28,13 +32,24 @@ app.get("*", async (c) => {
 	let description = metadata[firstSegment]?.description || "Ocean Monitoring"
 
 	if (firstSegment === 'sites') {
-		const res = (await fetch(`https://ocean-systems.uc.r.appspot.com/api/sites/${id}`))
-		const site = await  res.json() as any;
-		title = `Aqualink Site ${site?.name ?? ''}`
+		let name: string = ''
+		try {
+			name = await c.env.aqualink_sites.get(id, ) as string;
+			if (!name) {
+				console.log("fetching and cache name")
+				const res = (await fetch(`https://ocean-systems.uc.r.appspot.com/api/sites/${id}`))
+				const site = await res.json() as any;
+				name = site.name
+				c.env.aqualink_sites.put(id, name)
+			}
+		} catch (err) {
+			console.error(err)
+		}
+
+
+		title = `Aqualink Site ${name}`
 
 	}
-
-
 
 	const html = `
 <!DOCTYPE html>
@@ -67,7 +82,6 @@ content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable
 </body>
 </html>
 `
-
 
 	return c.html(html)
 
