@@ -4,20 +4,14 @@
  */
 {
 	"$schema": "node_modules/wrangler/config-schema.json",
-	"name": "aqualink",
+	"name": "CF-worker-SPA-meta-SSR-template",
 	"main": "src/index.ts",
 	"compatibility_date": "2025-02-14",
 	"observability": {
 		"enabled": true
 	},
-  "assets": {
+  	"assets": {
 		"directory": "./public/",
 		"binding": "ASSETS"
-	},
-	"kv_namespaces": [
-    {
-      "binding": "aqualink_sites",
-      "id": "7d751aa4c75b4563a0b2916fb9bac441"
-    }
-  ]
+	}
 }
